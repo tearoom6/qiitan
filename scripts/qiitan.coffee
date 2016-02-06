@@ -117,6 +117,7 @@ module.exports = (robot) ->
   channel = process.env.SLACK_CHANNEL_NAME
   accessToken = process.env.QIITA_ACCESS_TOKEN
   redisUrl = process.env.REDIS_URL
+  cronTime = process.env.CRON_TIME
 
   sendToSlack = (channel, title, msg, color) ->
     data =
@@ -158,7 +159,7 @@ module.exports = (robot) ->
 
   # cron job
   job = new CronJob
-    cronTime: '0 */15 * * * *'
+    cronTime: cronTime
     onTick: () ->
       checkAllItems()
     start: false

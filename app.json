@@ -28,6 +28,10 @@
       "value": "5",
       "required": false
     },
+    "CRON_TIME": {
+      "description": "the job interval setting.",
+      "value": "0 */15 * * * *"
+    },
     "QIITA_ACCESS_TOKEN": {
       "description": "the access token for Qiita API.",
       "value": ""
