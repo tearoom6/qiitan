@@ -1,0 +1,18 @@
+{
+  "name": "Qiitan",
+  "version": "1.0.0",
+  "private": false,
+  "author": "tearoom6 <tomohiro.murota@gmail.com>",
+  "description": "Qiitan notifies Qiita updates.",
+  "dependencies": {
+    "cron": "1.1.0",
+    "hubot": "2.18.0",
+    "hubot-heroku-keepalive": "1.0.2",
+    "hubot-slack": "3.4.2",
+    "node-rest-client": "1.8.0",
+    "redis": "2.4.2"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}

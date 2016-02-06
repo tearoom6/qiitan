@@ -1,0 +1,56 @@
+{
+  "name": "Qiitan",
+  "description": "Qiitan notifies Qiita updates.",
+  "keywords": [
+    "Hubot",
+    "Slack",
+    "Qiita"
+  ],
+  "repository": "https://github.com/tearoom6/qiitan",
+  "logo": "https://raw.githubusercontent.com/tearoom6/qiitan/master/logo.png",
+  "env": {
+    "HUBOT_HEROKU_KEEPALIVE_URL": {
+      "description": "the complete URL to keepalive, including a trailing slash.",
+      "value": "https://{YOUR_APP_NAME}.herokuapp.com/"
+    },
+    "HUBOT_HEROKU_WAKEUP_TIME": {
+      "description": "the time of day (HH:MM) when Qiitan should wake up.",
+      "value": "6:00",
+      "required": false
+    },
+    "HUBOT_HEROKU_SLEEP_TIME": {
+      "description": "the time of day (HH:MM) when Qiitan should go to sleep.",
+      "value": "22:00",
+      "required": false
+    },
+    "HUBOT_HEROKU_KEEPALIVE_INTERVAL": {
+      "description": "the interval in which to keepalive, in minutes.",
+      "value": "5",
+      "required": false
+    },
+    "QIITA_ACCESS_TOKEN": {
+      "description": "the access token for Qiita API.",
+      "value": ""
+    },
+    "HUBOT_SLACK_TOKEN": {
+      "description": "the API token for the Slack user you would like to run Qiitan under.",
+      "value": "xoxb-..."
+    },
+    "SLACK_CHANNEL_NAME": {
+      "description": "the room name to which notifications are sent.",
+      "value": "#general"
+    },
+    "LANG": {
+      "description": "the language in which the app runs.",
+      "value": "ja_JP.UTF-8"
+    },
+    "TZ": {
+      "description": "the timezone in which the app runs.",
+      "value": "Asia/Tokyo"
+    }
+  },
+  "addons": [
+    "heroku-redis:hobby-dev",
+    "scheduler:standard"
+  ]
+}
