@@ -87,11 +87,22 @@ class QiitaClient
 
 
 class DataStore
+  @KEY_LOCK     = 'QIITAN:LOCK'
   @KEY_USERS    = 'QIITAN:USERS'
   @KEY_STOCKERS = 'QIITAN:STOCKERS'
 
   constructor: (redisUrl) ->
     @client = Redis.createClient(redisUrl)
+
+  isLocked: (callback) ->
+    @client.get DataStore.KEY_LOCK, (err, data) ->
+      callback data == '1'
+
+  lock: () ->
+    @client.set DataStore.KEY_LOCK, '1', (err, res) -> {}
+
+  unlock: () ->
+    @client.del DataStore.KEY_LOCK, (err, res) -> {}
 
   userIds: (callback) ->
     @client.keys "#{DataStore.KEY_USERS}:*", (err, data) ->
@@ -141,18 +152,22 @@ module.exports = (robot) ->
   checkAllItems = (postSlackFlg = true) ->
     qiita = new QiitaClient(accessToken)
     dataStore = new DataStore(redisUrl)
-    dataStore.userIds (storedUserIds) ->
-      storedUserIds = [] unless storedUserIds
-      qiita.allMyItems qiita, (items) ->
-        for item in items
-          checkNewStocker qiita, dataStore, item, (item, stocker) ->
-            robot.logger.info "New stock found on item: #{item.id}."
-            dataStore.addStockerId item.id, stocker.id
-            dataStore.addUser stocker if stocker.id not in storedUserIds
-            if postSlackFlg
-              sendToSlack channel, '投稿がストックされました:+1:',
-                  "#{item.title}\n#{item.url}",
-                  '#41ab5d'
+    dataStore.isLocked (isLocked) ->
+      return if isLocked
+      dataStore.lock()
+      dataStore.userIds (storedUserIds) ->
+        storedUserIds = [] unless storedUserIds
+        qiita.allMyItems qiita, (items) ->
+          for item in items
+            checkNewStocker qiita, dataStore, item, (item, stocker) ->
+              robot.logger.info "New stock found on item: #{item.id}."
+              dataStore.addStockerId item.id, stocker.id
+              dataStore.addUser stocker if stocker.id not in storedUserIds
+              if postSlackFlg
+                sendToSlack channel, '投稿がストックされました:+1:',
+                    "#{item.title}\n#{item.url}",
+                    '#41ab5d'
+            dataStore.unlock()
 
   # init job
   checkAllItems(false)
