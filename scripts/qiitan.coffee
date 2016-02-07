@@ -90,9 +90,15 @@ class DataStore
   @KEY_LOCK     = 'QIITAN:LOCK'
   @KEY_USERS    = 'QIITAN:USERS'
   @KEY_STOCKERS = 'QIITAN:STOCKERS'
+  @connectionPool = {}
 
-  constructor: (redisUrl) ->
-    @client = Redis.createClient(redisUrl)
+  constructor: (@redisUrl) ->
+    return if @client = DataStore.connectionPool[@redisUrl]
+    @client = Redis.createClient(@redisUrl)
+    DataStore.connectionPool[@redisUrl] = @client
+
+  disconnect: () ->
+    @client.quit()
 
   isLocked: (callback) ->
     @client.get DataStore.KEY_LOCK, (err, data) ->
@@ -150,6 +156,7 @@ module.exports = (robot) ->
             newStockerCallback(item, stocker)
 
   checkAllItems = (postSlackFlg = true) ->
+    robot.logger.info "Job checkAllItems started. postSlack: #{postSlackFlg}."
     qiita = new QiitaClient(accessToken)
     dataStore = new DataStore(redisUrl)
     dataStore.isLocked (isLocked) ->
@@ -167,7 +174,7 @@ module.exports = (robot) ->
                 sendToSlack channel, '投稿がストックされました:+1:',
                     "#{item.title}\n#{item.url}",
                     '#41ab5d'
-            dataStore.unlock()
+          dataStore.unlock()
 
   # init job
   checkAllItems(false)
