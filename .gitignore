@@ -1,3 +1,5 @@
 node_modules
 .DS_Store*
 .hubot_history
+.hubot_slack_token
+.qiita_access_token
