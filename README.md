@@ -28,3 +28,22 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+
+## Development
+
+Save secret values to the local file.
+
+```sh
+# Save Slack-Hubot integration API key.
+$ echo "<API_KEY>" > .hubot_slack_token
+
+# Save Qiita access token.
+$ echo "<ACCESS_TOKEN>" > .qiita_access_token
+```
+
+Install direnv & execute allow command at first time.
+
+```sh
+$ direnv allow
+```
+
